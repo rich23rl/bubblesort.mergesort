@@ -1,53 +1,69 @@
 package com.company;
-import java.util.Scanner;
 import java.util.Timer;
 
 public class Main {
     public static void main(String[] args) {
-        
+    int[] a = new int[100000];
+    int[] b = new int[100000];
+
+    a = mergeSort(a);
+    b = bubbleSort(b);
+
+        long start = System.nanoTime();
+        System.out.println("MERGE SORT");
+            long time = System.nanoTime()- start;
+        System.out.println(time+" Nanosegundos");
+
+        System.out.println("BUBBLE SORT");
+            long time1 = System.nanoTime()- start;
+        System.out.println(time1+" Nanosegundos");
 }
-    static void bubbleSort(int[] arr){
-        int n = arr.length;
-        int temp = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < (n-i); j++) {
-                if (arr[j-1] > arr[j]) {
-                    //swap elements
-                    temp = arr[j-1];
-                    arr[j-1] = arr[j];
+    public static int[] bubbleSort(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                if (arr[i] < arr[j]) {
+                    int temp = arr[i];
+                    arr[i] = arr[j];
                     arr[j] = temp;
                 }
             }
         }
+        return arr;
     }
-    static int[] merge(int[] a, int[] b){
-        int[] retval = new int[a.length + b.length];
-        int i=0, j=0, k=0;
-        for (;j < b.length && k < b.length; i++) {
-            //retval[i] = a[j] < b[k] ? a[j++]:b[k++];
-            if (a[j] < b[k]) {
-                retval[i]=a[j++];
+
+    public  static int[] mergeSort(int[] arr){
+        if(arr.length <= 1){
+            return arr;
+        }
+        int medio = arr.length /2;
+
+        int[] abajo = new int[medio];
+        int[] arriba = new int[arr.length - medio];
+        for (int i = 0; i < medio; i++) {
+            abajo[i] = arr[i];
+        }
+
+        for (int i = 0; i < arriba.length ; i++) {
+            arriba[i] = arr[i + abajo.length];
+        }
+        return  merge(mergeSort(abajo), mergeSort(arriba));
+    }
+
+    public static int[] merge(int[] a, int[] b){
+        int[] retval = new int[a.length+ b.length];
+        int i = 0, j = 0, k = 0;
+        while (j < a.length && k < b.length ){
+            if(a[j] < b[k]){
+                retval[i++] = a[j++];
             }else{
-                retval[i]=b[k++];
+                retval[i++] = b[k++];
             }
         }
-        if (j < a.length) {
-            for (; i < retval.length; i++) {
-                retval[i] = a[j++];
-            }
-        }else if (k < b.length) {
-            for (; i < retval.length; i++) {
-                retval[i] = b[k++];
-            }
+        while (j < a.length){
+            retval[i++] = a[j++];
         }
-        if (j < a.length) {
-            for (; i < retval.length; i++) {
-                retval[i] = a[j++];
-            }
-        }else if (k < b.length) {
-            for (; i < retval.length; i++) {
-                retval[i] = b[k++];
-            }
+        while (k < b.length){
+            retval[i++] = b[k++];
         }
         return retval;
     }
